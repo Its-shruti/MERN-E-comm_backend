@@ -314,7 +314,7 @@ app.get('/recomm/:id', async (req, res)=>{
 
 
 //! Add to cart functionality (data-saving) -----------------------------------------------------------
-app.post('/addtocart/:id', verifyToken, async (req, res)=>{
+app.post('/addtocart/:id/:userId', verifyToken, async (req, res)=>{
     const id = req.params.id;
     const userId = req.params.userId;
 
