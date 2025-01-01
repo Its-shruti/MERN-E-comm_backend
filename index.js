@@ -306,12 +306,13 @@ app.get('/recomm/:id', async (req, res)=>{
 //! Add to cart functionality (data-saving) -----------------------------------------------------------
 app.post('/addtocart/:id', verifyToken, async (req, res)=>{
     const id = req.params.id;
+    const userId = req.params.userId;
 
     const data = await ProductModel.findById(id);
 
     const existProduct = await CartModel.findOne({
         prodId: id,
-        userId: data.userId
+        userId: userId
     });
 
     if(existProduct){
@@ -324,7 +325,7 @@ app.post('/addtocart/:id', verifyToken, async (req, res)=>{
         cartAuth: data.bookAuth,
         cartEdit: data.bookEd,
         totalPrice: Number(data.bookPrice),
-        userId: data.userId,
+        userId: userId,
         prodId: id
     });
     const finalResult = await result.save();
