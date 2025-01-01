@@ -180,14 +180,24 @@ app.get('/getbookdata/:id', verifyToken, async (req, res)=>{
 
 //! updating data (by seller) -------------------------------------------------------------
 app.put('/updatedata/:id', verifyToken, async (req, res)=>{
+    const existingProduct = await ProductModel.findById(req.params.id);
+        if (!existingProduct) {
+            return res.status(404).send({ error: "Product not found" });
+        }
+
+        // Merge existing data with new data
+        const updatedData = {
+            ...existingProduct._doc, // Existing data
+            ...req.body,            // New data from request
+        };
     let result = await ProductModel.updateOne(
         {_id: req.params.id},
-        {$set: req.body}
+        {$set: updatedData}
     )
-    if(result){
+    if(result.modifiedCount > 0){
         res.send({message: "Data updated successfully...", ok: true});
     }else{
-        res.send({error: "something went wrong try after sometime"});
+        res.send({error: "No changes were made", ok: false});
     }
 });
 
